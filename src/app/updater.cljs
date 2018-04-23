@@ -17,5 +17,6 @@
             :game/write game/write
             :game/step game/step
             :game/reset game/reset-cursor
+            :game/toggle-running game/toggle-running
             (do (println "Unknown op:" op) identity))]
     (f db op-data sid op-id op-time)))

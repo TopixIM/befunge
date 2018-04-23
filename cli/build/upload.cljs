@@ -2,9 +2,9 @@
 (ns build.upload
   (:require ["child_process" :as child-process]))
 
-(def configs {:orgization "Cumulo"
-              :name "workflow"
-              :cdn "cumulo-workflow"})
+(def configs {:orgization "TopixIM"
+              :name "befunge"
+              :cdn "befunge"})
 
 (defn sh! [command]
   (println command)

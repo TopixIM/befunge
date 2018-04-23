@@ -10,6 +10,10 @@
             ["shortid" :as shortid]
             [app.node-env :as node-env]))
 
+(declare dispatch!)
+
+(declare run-the-game!)
+
 (def initial-db
   (let [filepath (:storage-path node-env/configs)]
     (if (fs/existsSync filepath)
@@ -28,12 +32,17 @@
    (:storage-path node-env/configs)
    (pr-str (assoc (:db @*reel) :sessions {}))))
 
+(defn run-the-game! [sid]
+  (dispatch! :game/step nil sid)
+  (js/setTimeout (fn [] (if (get-in @*reel [:db :running?]) (run-the-game! sid))) 400))
+
 (defn dispatch! [op op-data sid]
-  (let [op-id (.generate shortid), op-time (.valueOf (js/Date.))]
+  (let [op-id (.generate shortid), op-time (.valueOf (js/Date.)), db (get @*reel :db)]
     (println "Dispatch!" (str op) op-data sid)
     (try-verbosely!
      (cond
        (= op :effect/persist) (persist-db!)
+       (= op :effect/run) (do (run-the-game! sid) (dispatch! :game/toggle-running true))
        :else
          (let [new-reel (reel-reducer @*reel updater op op-data sid op-id op-time)]
            (reset! *reel new-reel))))))

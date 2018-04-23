@@ -32,10 +32,11 @@
 
 (defcomp
  comp-playground
- (game)
+ (game running?)
  (let [board (:board game), cursor (:cursor game)]
    (div
     {:style (merge ui/flex ui/center)}
+    (div {} (comp-md "currently supported: `<` `>` `^` `v` `?`"))
     (div
      {:style {:position :relative}}
      (div
@@ -60,4 +61,10 @@
       {}
       (button {:style ui/button, :on-click (action-> :game/step nil)} (<> "Step"))
       (=< 8 nil)
-      (button {:style ui/button, :on-click (action-> :game/reset nil)} (<> "Reset")))))))
+      (button {:style ui/button, :on-click (action-> :game/reset nil)} (<> "Reset"))
+      (=< 8 nil)
+      (button
+       {:style ui/button,
+        :on-click (fn [e d! m!]
+          (if running? (d! :game/toggle-running false) (d! :effect/run nil)))}
+       (<> (if running? "Stop" "Run"))))))))

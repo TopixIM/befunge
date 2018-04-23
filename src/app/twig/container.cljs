@@ -29,5 +29,7 @@
                 :data
                 (case (:name router) :profile (twig-members (:sessions db) (:users db)) {})),
        :color (color/randomColor),
-       :game (:game db)}
+       :game (:game db),
+       :count (count (:sessions db)),
+       :running? (:running? db)}
       nil))))

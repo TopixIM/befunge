@@ -2,9 +2,13 @@
 (ns app.updater.game (:require [app.schema :refer [settings]]))
 
 (defn reset-cursor [db op-data sid op-id op-time]
-  (assoc-in db [:game :cursor] {:x 0, :y 0}))
+  (-> db
+      (update
+       :game
+       (fn [game] (-> game (assoc :cursor {:x 0, :y 0}) (assoc :direction :right))))
+      (assoc :running true)))
 
-(defn step [db op-data session-id op-id op-time]
+(defn step [db op-data sid op-id op-time]
   (let [game (:game db)
         cursor (:cursor game)
         board (:board game)
@@ -15,7 +19,13 @@
         x-end? (= (:x settings) (inc x))
         y-begin? (zero? y)
         y-end? (= (:y settings) (inc y))
-        direction (case char "v" :down ">" :right "<" :left "^" :up (:direction game))]
+        direction (case char
+                    "v" :down
+                    ">" :right
+                    "<" :left
+                    "^" :up
+                    "?" (get [:up :down :left :right] (rand-int 4))
+                    (:direction game))]
     (update
      db
      :game
@@ -32,6 +42,8 @@
                   (if y-begin? (assoc cursor :y (dec (:y settings))) (update cursor :y dec))
                 (if y-end? (assoc cursor :y 0) (update cursor :y inc)))))
            (assoc :direction direction))))))
+
+(defn toggle-running [db op-data sid op-id op-time] (assoc db :running? op-data))
 
 (defn write [db op-data session-id op-id op-time]
   (let [position (:position op-data), char (:char op-data)]

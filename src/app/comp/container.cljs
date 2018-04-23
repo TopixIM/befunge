@@ -50,7 +50,7 @@
         (let [router (:router store)]
           (case (:name router)
             :profile (comp-profile (:user store) (:data router))
-            :home (comp-playground (:game store))
+            :home (comp-playground (:game store) (:running? store))
             {}))
         (comp-login states))
       (comp-navigation (:logged-in? store) (:count store))
