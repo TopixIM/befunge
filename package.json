@@ -1,0 +1,33 @@
+{
+  "name": "cumulo-workflow",
+  "version": "0.1.0",
+  "description": "Cumulo Workflow",
+  "main": "index.js",
+  "scripts": {
+    "watch": "shadow-cljs watch client server",
+    "build": "shadow-cljs clj-run build.main/build",
+    "build-local": "shadow-cljs clj-run build.main/build-local",
+    "page": "shadow-cljs clj-run build.main/page",
+    "upload": "lumo -c cli/ -m build.upload",
+    "serve": "http-server dist -s",
+    "repl": "rlwrap shadow-cljs clj-repl client",
+    "repl-server": "rlwrap shadow-cljs clj-repl server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mvc-works/cumulo-workflow.git"
+  },
+  "author": "jiyinyiyong",
+  "license": "MIT",
+  "dependencies": {
+    "md5": "^2.2.1",
+    "randomcolor": "^0.5.3",
+    "shortid": "^2.2.6"
+  },
+  "devDependencies": {
+    "http-server": "^0.11.1",
+    "shadow-cljs": "^2.3.0",
+    "source-map-support": "^0.5.4",
+    "ws": "^5.1.1"
+  }
+}
