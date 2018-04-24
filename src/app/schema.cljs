@@ -6,6 +6,7 @@
 (def game
   {:board {},
    :stack [],
+   :mode :normal,
    :direction :right,
    :interval 1024,
    :cursor {:x 0, :y 0},

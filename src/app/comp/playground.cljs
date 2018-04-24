@@ -36,7 +36,11 @@
  (let [board (:board game), cursor (:cursor game), running? (:running? game)]
    (div
     {:style (merge ui/flex ui/center)}
-    (div {} (comp-md "currently supported: `<` `>` `^` `v` `?`"))
+    (div
+     {}
+     (comp-md
+      "Online playground for [Befunge](https://dorianbrown.github.io/befunge/) ([Befunge 介绍](https://coolshell.cn/articles/4458.html)). Currently only `< > ^ v ? @` are supported. Will add more later..."))
+    (=< nil 16)
     (div
      {:style {:position :relative}}
      (div
@@ -48,23 +52,25 @@
                :top (+ 1 (* (+ 2 (:size settings)) (:y cursor))),
                :z-index -1}})
      (list->
-      {}
+      {:style {}}
       (->> (range (:y settings))
            (map
             (fn [y]
               [y
                (list->
                 {:style (merge ui/row)}
-                (->> (range (:x settings)) (map (fn [x] [x (comp-stone board x y)]))))]))))
-     (=< nil 8)
+                (->> (range (:x settings)) (map (fn [x] [x (comp-stone board x y)]))))])))))
+    (=< nil 8)
+    (div
+     {:style ui/row-parted}
      (div
-      {}
+      {:style ui/row}
       (button {:style ui/button, :on-click (action-> :game/step nil)} (<> "Step"))
-      (=< 8 nil)
-      (button {:style ui/button, :on-click (action-> :game/reset nil)} (<> "Reset"))
       (=< 8 nil)
       (button
        {:style ui/button,
         :on-click (fn [e d! m!]
           (if running? (d! :game/toggle-running false) (d! :effect/run nil)))}
-       (<> (if running? "Stop" "Run"))))))))
+       (<> (if running? "Stop" "Run"))))
+     (=< 120 nil)
+     (button {:style ui/button, :on-click (action-> :game/reset nil)} (<> "Reset"))))))
