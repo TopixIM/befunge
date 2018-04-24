@@ -3,9 +3,15 @@
 
 (def configs {:storage-key "befunge", :port 11004})
 
-(def game {:board {}, :stack [], :direction :right, :interval 1024, :cursor {:x 0, :y 0}})
+(def game
+  {:board {},
+   :stack [],
+   :direction :right,
+   :interval 1024,
+   :cursor {:x 0, :y 0},
+   :running? false})
 
-(def database {:sessions {}, :users {}, :game game, :running? false})
+(def database {:sessions {}, :users {}, :game game})
 
 (def dev? (do ^boolean js/goog.DEBUG))
 

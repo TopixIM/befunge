@@ -34,7 +34,7 @@
 
 (defn run-the-game! [sid]
   (dispatch! :game/step nil sid)
-  (js/setTimeout (fn [] (if (get-in @*reel [:db :running?]) (run-the-game! sid))) 400))
+  (js/setTimeout (fn [] (if (get-in @*reel [:db :game :running?]) (run-the-game! sid))) 200))
 
 (defn dispatch! [op op-data sid]
   (let [op-id (.generate shortid), op-time (.valueOf (js/Date.)), db (get @*reel :db)]
@@ -55,7 +55,7 @@
 (defn render-loop! []
   (if (not (identical? @*reader-reel @*reel))
     (do (reset! *reader-reel @*reel) (sync-clients! @*reader-reel)))
-  (js/setTimeout render-loop! 200))
+  (js/setTimeout render-loop! 60))
 
 (defn main! []
   (run-server! #(dispatch! %1 %2 %3) (:port schema/configs))

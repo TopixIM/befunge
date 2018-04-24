@@ -5,7 +5,8 @@
   (-> db
       (update
        :game
-       (fn [game] (-> game (assoc :cursor {:x 0, :y 0}) (assoc :direction :right))))
+       (fn [game]
+         (-> game (assoc :cursor {:x 0, :y 0}) (assoc :direction :right) (assoc :board {}))))
       (assoc :running true)))
 
 (defn step [db op-data sid op-id op-time]
@@ -26,24 +27,26 @@
                     "^" :up
                     "?" (get [:up :down :left :right] (rand-int 4))
                     (:direction game))]
-    (update
-     db
-     :game
-     (fn [game]
-       (-> game
-           (update
-            :cursor
-            (fn [cursor]
-              (case direction
-                :left
-                  (if x-begin? (assoc cursor :x (dec (:x settings))) (update cursor :x dec))
-                :right (if x-end? (assoc cursor :x 0) (update cursor :x inc))
-                :up
-                  (if y-begin? (assoc cursor :y (dec (:y settings))) (update cursor :y dec))
-                (if y-end? (assoc cursor :y 0) (update cursor :y inc)))))
-           (assoc :direction direction))))))
+    (if (= char "@")
+      (assoc db :running? false)
+      (update
+       db
+       :game
+       (fn [game]
+         (-> game
+             (update
+              :cursor
+              (fn [cursor]
+                (case direction
+                  :left
+                    (if x-begin? (assoc cursor :x (dec (:x settings))) (update cursor :x dec))
+                  :right (if x-end? (assoc cursor :x 0) (update cursor :x inc))
+                  :up
+                    (if y-begin? (assoc cursor :y (dec (:y settings))) (update cursor :y dec))
+                  (if y-end? (assoc cursor :y 0) (update cursor :y inc)))))
+             (assoc :direction direction)))))))
 
-(defn toggle-running [db op-data sid op-id op-time] (assoc db :running? op-data))
+(defn toggle-running [db op-data sid op-id op-time] (assoc-in db [:game :running?] op-data))
 
 (defn write [db op-data session-id op-id op-time]
   (let [position (:position op-data), char (:char op-data)]

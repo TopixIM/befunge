@@ -32,8 +32,8 @@
 
 (defcomp
  comp-playground
- (game running?)
- (let [board (:board game), cursor (:cursor game)]
+ (game)
+ (let [board (:board game), cursor (:cursor game), running? (:running? game)]
    (div
     {:style (merge ui/flex ui/center)}
     (div {} (comp-md "currently supported: `<` `>` `^` `v` `?`"))
